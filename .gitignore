@@ -1,0 +1,13 @@
+﻿# Maven
+target/
+
+# Visual Studio Code
+.vscode/
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

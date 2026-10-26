@@ -1,0 +1,1584 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityLab Pro | Foxy Assistant</title>
+
+<style>
+:root {
+    --bg: #080e1c;
+    --panel: #121e31;
+    --panel2: #192941;
+    --border: #293b53;
+    --text: #f1f6ff;
+    --muted: #94a8c3;
+    --blue: #38bdf8;
+    --green: #22c55e;
+    --red: #f87171;
+    --purple: #a78bfa;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* CONTENIDO SIN SIDEBAR */
+
+.main {
+    width: 100%;
+    max-width: 1600px;
+    min-height: 100vh;
+    margin: auto;
+    padding: 35px 45px 100px;
+}
+
+.page {
+    display: none;
+    animation: aparecer .3s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    font-size: 32px;
+    margin: 10px 0;
+}
+
+h2 {
+    font-size: 20px;
+    margin: 0 0 20px;
+}
+
+.description {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.status {
+    background: #103827;
+    border: 1px solid #256e4a;
+    color: #4ade80;
+    padding: 12px 18px;
+    border-radius: 30px;
+    font-weight: bold;
+}
+
+/* TARJETAS */
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin: 25px 0;
+}
+
+.card, .panel {
+    background: linear-gradient(
+        145deg, var(--panel), #101929
+    );
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.metric-title {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.metric-value {
+    font-size: 40px;
+    font-weight: 800;
+    margin: 15px 0;
+}
+
+.green { color: var(--green); }
+.blue { color: var(--blue); }
+.red { color: var(--red); }
+.purple { color: var(--purple); }
+
+.progress {
+    height: 9px;
+    background: #26364b;
+    border-radius: 20px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg, #0891b2, #22c55e
+    );
+    transition: width .4s;
+}
+
+.grid-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.coverage-item {
+    margin: 25px 0;
+}
+
+.coverage-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+/* GRAFICO CIRCULAR */
+
+.donut {
+    width: 210px;
+    height: 210px;
+    background: conic-gradient(
+        var(--green) 100%, #293950 0
+    );
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 25px auto;
+}
+
+.donut-center {
+    width: 160px;
+    height: 160px;
+    background: var(--panel);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut-center strong {
+    font-size: 42px;
+    color: var(--green);
+}
+
+/* TABLAS */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: var(--panel2);
+    color: var(--muted);
+    text-align: left;
+    padding: 16px;
+    font-size: 13px;
+}
+
+td {
+    padding: 17px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.code {
+    color: var(--blue);
+    font-family: Consolas, monospace;
+}
+
+.success {
+    display: inline-block;
+    background: #103827;
+    color: #4ade80;
+    border-radius: 20px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.btn {
+    background: var(--blue);
+    border: none;
+    color: #071222;
+    border-radius: 10px;
+    padding: 13px 20px;
+    font-weight: bold;
+    margin: 6px 6px 6px 0;
+}
+
+.btn:hover {
+    filter: brightness(1.15);
+}
+
+.btn.secondary {
+    background: #253b57;
+    color: white;
+}
+
+pre {
+    padding: 20px;
+    background: #080f1e;
+    color: #a5f3fc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+}
+
+.phase {
+    background: var(--panel2);
+    border-left: 4px solid var(--blue);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.red-phase { border-color: var(--red); }
+.green-phase { border-color: var(--green); }
+.blue-phase { border-color: var(--blue); }
+
+input[type="file"] {
+    max-width: 100%;
+    padding: 12px;
+    color: white;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+.notification {
+    color: var(--green);
+    margin-top: 15px;
+}
+
+/* ====================================
+   MASCOTA FOXY GRANDE
+==================================== */
+
+.foxy-widget {
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.foxy-personaje {
+    width: 245px;
+    height: 310px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    animation: foxyFlotar 3s ease-in-out infinite;
+}
+
+.foxy-personaje img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(
+        0 12px 22px #38bdf877
+    );
+    transition: transform .3s ease;
+}
+
+.foxy-personaje:hover img {
+    transform: scale(1.07);
+}
+
+@keyframes foxyFlotar {
+    0%, 100% {
+        translate: 0 0;
+    }
+
+    50% {
+        translate: 0 -12px;
+    }
+}
+
+.foxy-etiqueta {
+    width: 245px;
+    text-align: center;
+    color: var(--blue);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px black;
+}
+
+/* VENTANA DE FOXY */
+
+.foxy-chat {
+    display: none;
+    position: absolute;
+    bottom: 320px;
+    right: 5px;
+    width: 365px;
+    max-width: calc(100vw - 30px);
+    max-height: min(65vh, 520px);
+    overflow-y: auto;
+    padding: 22px;
+    background: #121e31;
+    border: 1px solid var(--blue);
+    border-radius: 20px;
+    box-shadow: 0 15px 45px #000b;
+}
+
+.foxy-chat.abierto {
+    display: block;
+    animation: aparecer .25s ease;
+}
+
+.foxy-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.foxy-avatar {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    background: #203957;
+    border-radius: 14px;
+}
+
+.foxy-info {
+    flex: 1;
+}
+
+.foxy-nombre {
+    display: block;
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--blue);
+}
+
+.foxy-estado {
+    color: var(--green);
+    font-size: 12px;
+}
+
+.foxy-cerrar {
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 25px;
+}
+
+.foxy-mensaje {
+    padding: 15px;
+    background: var(--panel2);
+    color: #e2e8f0;
+    border-radius: 12px;
+    line-height: 1.65;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.foxy-opciones {
+    display: grid;
+    gap: 9px;
+}
+
+.foxy-opciones button {
+    text-align: left;
+    background: #183957;
+    border: 1px solid #2b5675;
+    border-radius: 10px;
+    padding: 13px;
+    color: #d6efff;
+}
+
+.foxy-opciones button:hover {
+    background: #245579;
+    border-color: var(--blue);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px) {
+    .metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-two {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:700px) {
+    .main {
+        padding: 20px;
+        padding-bottom: 160px;
+    }
+
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .foxy-personaje {
+        width: 145px;
+        height: 185px;
+    }
+
+    .foxy-etiqueta {
+        width: 145px;
+        font-size: 10px;
+    }
+
+    .foxy-chat {
+        bottom: 195px;
+        right: 0;
+        width: min(340px, calc(100vw - 25px));
+    }
+}
+
+@media print {
+    .foxy-widget, .btn, input[type="file"] {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: #111827;
+    }
+
+    .main {
+        padding: 10px;
+    }
+
+    .page {
+        display: none !important;
+    }
+
+    .page.active {
+        display: block !important;
+    }
+
+    .card, .panel, .phase {
+        background: white;
+        color: #111827;
+        border-color: #aaa;
+        break-inside: avoid;
+    }
+
+    .description, .metric-title {
+        color: #475569;
+    }
+
+    .donut-center {
+        background: white;
+    }
+
+    th {
+        background: #e2e8f0;
+        color: #111827;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="main">
+
+<!-- PANEL GENERAL -->
+
+<section class="page active" id="general">
+
+    <div class="topbar">
+        <div>
+            <div class="description">
+                CALIDAD Y PRUEBAS DE SOFTWARE / SEMANA 10
+            </div>
+
+            <h1>QualityLab Pro</h1>
+
+            <p class="description">
+                Dashboard de Calidad de Software ·
+                Java 17 · JUnit 5 · Mockito · JaCoCo
+            </p>
+        </div>
+
+        <div class="status">
+            ● BUILD SUCCESS
+        </div>
+    </div>
+
+    <div class="metrics">
+
+        <div class="card">
+            <div class="metric-title">
+                Cobertura de instrucciones
+            </div>
+
+            <div class="metric-value green"
+                 id="general-instrucciones">
+                100%
+            </div>
+
+            <div class="progress">
+                <div class="progress-fill"
+                     id="progresoIns"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">
+                Cobertura de ramas
+            </div>
+
+            <div class="metric-value green"
+                 id="general-ramas">
+                100%
+            </div>
+
+            <div class="progress">
+                <div class="progress-fill"
+                     id="progresoRamas"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">
+                Pruebas exitosas
+            </div>
+
+            <div class="metric-value blue">
+                10/10
+            </div>
+
+            <div class="description">
+                0 fallidas · 0 errores
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">
+                Clases analizadas
+            </div>
+
+            <div class="metric-value purple"
+                 id="clasesGeneral">
+                3
+            </div>
+
+            <div class="description">
+                JaCoCo 0.8.13
+            </div>
+        </div>
+
+    </div>
+
+    <div class="grid-two">
+
+        <div class="panel">
+
+            <h2>Resultados del proyecto</h2>
+
+            <p class="description">
+                Se evaluaron el cálculo del ITF académico,
+                los descuentos VIP y el procesamiento de
+                pagos mediante pruebas unitarias.
+            </p>
+
+            <div class="coverage-item">
+                <div class="coverage-label">
+                    <span>Instrucciones</span>
+                    <strong id="labelIns">100%</strong>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-fill"
+                         id="barraIns"></div>
+                </div>
+            </div>
+
+            <div class="coverage-item">
+                <div class="coverage-label">
+                    <span>Ramas</span>
+                    <strong id="labelRamas">100%</strong>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-fill"
+                         id="barraRamas"></div>
+                </div>
+            </div>
+
+            <button class="btn"
+                    onclick="navegar('cobertura')">
+                Ver cobertura
+            </button>
+
+        </div>
+
+        <div class="panel">
+
+            <h2>Cobertura general</h2>
+
+            <div class="donut" id="donut">
+                <div class="donut-center">
+                    <strong id="donutTexto">100%</strong>
+                    <span class="description">
+                        Instrucciones
+                    </span>
+                </div>
+            </div>
+
+            <p class="description"
+               style="text-align:center">
+                Resultados de la última ejecución
+                compartida de JaCoCo.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- COBERTURA -->
+
+<section class="page" id="cobertura">
+
+    <h1>◎ Cobertura de código</h1>
+
+    <p class="description">
+        Resultados medidos mediante JaCoCo.
+        Importa un CSV para actualizar los indicadores.
+    </p>
+
+    <div class="metrics">
+
+        <div class="card">
+            <div class="metric-title">Instrucciones</div>
+            <div class="metric-value green"
+                 id="covIns">100%</div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">Ramas</div>
+            <div class="metric-value green"
+                 id="covRamas">100%</div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">Líneas</div>
+            <div class="metric-value blue"
+                 id="covLineas">20/20</div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">Métodos</div>
+            <div class="metric-value purple"
+                 id="covMetodos">6/6</div>
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <h2>Importar resultados de JaCoCo</h2>
+
+        <p class="description">
+            Selecciona:
+            target/site/jacoco/jacoco.csv
+        </p>
+
+        <input type="file"
+               id="csvFile"
+               accept=".csv,text/csv">
+
+        <button class="btn"
+                onclick="importarCSV()">
+            Importar CSV
+        </button>
+
+        <div class="notification"
+             id="csvMensaje"></div>
+    </div>
+
+    <div class="panel">
+
+        <h2>Cobertura por clase</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Clase</th>
+                        <th>Instrucciones</th>
+                        <th>Ramas</th>
+                        <th>Líneas</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaCobertura">
+                    <tr>
+                        <td class="code">CalculadoraDescuentos</td>
+                        <td>Consultar CSV</td>
+                        <td>Consultar CSV</td>
+                        <td>Consultar CSV</td>
+                        <td><span class="success">CUBIERTA</span></td>
+                    </tr>
+
+                    <tr>
+                        <td class="code">CalculadoraITF</td>
+                        <td>Consultar CSV</td>
+                        <td>Consultar CSV</td>
+                        <td>Consultar CSV</td>
+                        <td><span class="success">CUBIERTA</span></td>
+                    </tr>
+
+                    <tr>
+                        <td class="code">ProcesadorPagos</td>
+                        <td>Consultar CSV</td>
+                        <td>Consultar CSV</td>
+                        <td>Consultar CSV</td>
+                        <td><span class="success">CUBIERTA</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- PRUEBAS UNITARIAS -->
+
+<section class="page" id="pruebas">
+
+    <h1>✓ Pruebas unitarias</h1>
+
+    <p class="description">
+        Resultados de JUnit 5, Mockito y Maven.
+    </p>
+
+    <div class="metrics">
+
+        <div class="card">
+            <div class="metric-title">Total</div>
+            <div class="metric-value blue">10</div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">Exitosas</div>
+            <div class="metric-value green">10</div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">Fallidas</div>
+            <div class="metric-value">0</div>
+        </div>
+
+        <div class="card">
+            <div class="metric-title">Errores</div>
+            <div class="metric-value">0</div>
+        </div>
+
+    </div>
+
+    <div class="panel">
+        <h2>Suite de pruebas</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Clase de prueba</th>
+                        <th>Framework</th>
+                        <th>Pruebas</th>
+                        <th>Fallidas</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td class="code">CalculadoraDescuentosTest</td>
+                        <td>JUnit / Mockito</td>
+                        <td>2</td>
+                        <td>0</td>
+                        <td><span class="success">APROBADO</span></td>
+                    </tr>
+
+                    <tr>
+                        <td class="code">CalculadoraITFTest</td>
+                        <td>JUnit 5</td>
+                        <td>5</td>
+                        <td>0</td>
+                        <td><span class="success">APROBADO</span></td>
+                    </tr>
+
+                    <tr>
+                        <td class="code">ProcesadorPagosTest</td>
+                        <td>JUnit / Mockito</td>
+                        <td>3</td>
+                        <td>0</td>
+                        <td><span class="success">APROBADO</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel">
+
+        <h2>Comandos de pruebas</h2>
+
+        <pre>mvn clean test</pre>
+
+        <button class="btn"
+                onclick="copiar('mvn clean test')">
+            Copiar comando
+        </button>
+
+        <pre>mvn clean verify</pre>
+
+        <button class="btn secondary"
+                onclick="copiar('mvn clean verify')">
+            Copiar comando con cobertura
+        </button>
+
+        <p class="description">
+            Ejecuta estos comandos desde la terminal
+            de VS Code en la carpeta que contiene pom.xml.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- TDD Y MOCKITO -->
+
+<section class="page" id="tdd">
+
+    <h1>◇ TDD y Mockito</h1>
+
+    <p class="description">
+        Desarrollo guiado por pruebas
+        y simulación del servicio bancario.
+    </p>
+
+    <div class="phase red-phase">
+        <h2 class="red">01 · RED</h2>
+
+        <p>
+            Se creó CalculadoraITFTest antes
+            de implementar CalculadoraITF.
+        </p>
+
+        <pre>cannot find symbol
+symbol: class CalculadoraITF
+
+BUILD FAILURE</pre>
+    </div>
+
+    <div class="phase green-phase">
+        <h2 class="green">02 · GREEN</h2>
+
+        <p>
+            Se implementó el cálculo del ITF y
+            se ejecutaron las pruebas.
+        </p>
+
+        <pre>Tests run: 7
+Failures: 0
+Errors: 0
+
+BUILD SUCCESS</pre>
+    </div>
+
+    <div class="phase blue-phase">
+        <h2 class="blue">03 · REFACTOR</h2>
+
+        <p>
+            Se mejoraron los nombres y constantes
+            sin cambiar el funcionamiento.
+        </p>
+
+        <pre>UMBRAL_TRANSACCION = 1000.0
+TASA_ITF = 0.00005</pre>
+    </div>
+
+    <div class="panel">
+
+        <h2>Mockito: simulación bancaria</h2>
+
+        <p class="description">
+            Se simuló la respuesta del banco sin
+            conectarse a un servicio externo real.
+        </p>
+
+        <pre>when(bancoMock.procesarTransaccion(2000.10))
+    .thenReturn("Transacción Exitosa");
+
+verify(bancoMock, times(1))
+    .procesarTransaccion(2000.10);</pre>
+
+        <span class="success">
+            3 pruebas de pagos aprobadas
+        </span>
+
+    </div>
+
+</section>
+
+<!-- REPORTE ACADEMICO -->
+
+<section class="page" id="reporte">
+
+    <h1>▤ Reporte académico</h1>
+
+    <p class="description">
+        Guía Práctica N.º 10:
+        Pruebas Unitarias y TDD
+    </p>
+
+    <div class="panel">
+
+        <h2>Datos académicos</h2>
+
+        <p>
+            <strong>Universidad:</strong>
+            Universidad Privada San Juan Bautista
+        </p>
+
+        <p>
+            <strong>Curso:</strong>
+            Calidad y Pruebas de Software
+        </p>
+
+        <p>
+            <strong>Docente:</strong>
+            Mg. Joel Linder Vilca Pizarro
+        </p>
+
+        <p><strong>Semana:</strong> 10</p>
+
+        <p>
+            <strong>Proyecto:</strong>
+            Procesamiento de Pagos con TDD
+        </p>
+
+    </div>
+
+    <div class="panel">
+
+        <h2>Resultados obtenidos</h2>
+
+        <p class="description">
+            Se desarrolló un módulo de procesamiento
+            de pagos con Java 17, Maven, JUnit 5
+            y Mockito, aplicando la metodología TDD.
+        </p>
+
+        <p class="description">
+            Se verificó el cálculo del ITF con la
+            condición académica de transacciones
+            superiores a S/ 1,000 y se simuló
+            el servicio bancario mediante Mocks.
+        </p>
+
+        <p class="description">
+            Las diez pruebas unitarias se ejecutaron
+            exitosamente y el reporte JaCoCo mostró
+            100% de cobertura de instrucciones,
+            ramas y líneas.
+        </p>
+
+        <h2>Conclusión</h2>
+
+        <p class="description" id="conclusion">
+            La práctica permitió comprender la
+            importancia de las pruebas unitarias
+            en la calidad del software. La metodología
+            TDD ayudó a desarrollar funcionalidades
+            verificables desde el inicio, mientras
+            que Mockito permitió aislar las
+            dependencias externas. Finalmente,
+            JaCoCo permitió comprobar la cobertura
+            obtenida en la lógica de negocio.
+        </p>
+
+        <button class="btn"
+                onclick="window.print()">
+            Imprimir / Guardar PDF
+        </button>
+
+        <button class="btn secondary"
+                onclick="copiarConclusion()">
+            Copiar conclusión
+        </button>
+
+    </div>
+
+</section>
+
+</main>
+
+<!-- ====================================
+     FOXY COMO MENU PRINCIPAL
+==================================== -->
+
+<div class="foxy-widget">
+
+    <div class="foxy-chat"
+         id="foxyChat"
+         role="dialog"
+         aria-label="Asistente Foxy">
+
+        <div class="foxy-header">
+
+            <img
+                src="img/mascota-zorro.png"
+                class="foxy-avatar"
+                alt="Foxy">
+
+            <div class="foxy-info">
+                <span class="foxy-nombre">
+                    Foxy Assistant
+                </span>
+
+                <span class="foxy-estado">
+                    ● Asistente disponible
+                </span>
+            </div>
+
+            <button class="foxy-cerrar"
+                    onclick="cerrarFoxy()"
+                    aria-label="Cerrar asistente">
+                &times;
+            </button>
+
+        </div>
+
+        <div class="foxy-mensaje"
+             id="foxyMensaje"
+             aria-live="polite">
+            ¡Hola! Soy Foxy, tu asistente de
+            QualityLab Pro. Selecciona una
+            sección para comenzar.
+        </div>
+
+        <div class="foxy-opciones">
+
+            <button onclick="foxyResponder('general')">
+                Panel general
+            </button>
+
+            <button onclick="foxyResponder('cobertura')">
+                Cobertura de código
+            </button>
+
+            <button onclick="foxyResponder('pruebas')">
+                Pruebas unitarias
+            </button>
+
+            <button onclick="foxyResponder('tdd')">
+                TDD y Mockito
+            </button>
+
+            <button onclick="foxyResponder('reporte')">
+                Reporte académico
+            </button>
+
+        </div>
+
+    </div>
+
+    <button class="foxy-personaje"
+            id="foxyBoton"
+            onclick="alternarFoxy()"
+            aria-label="Abrir Foxy Assistant"
+            aria-expanded="false">
+
+        <img
+            src="img/mascota-zorro.png"
+            alt="Foxy, mascota QualityLab Pro">
+
+    </button>
+
+    <div class="foxy-etiqueta">
+        FOXY ASSISTANT
+    </div>
+
+</div>
+
+<script>
+
+/* NAVEGACION SIN SIDEBAR */
+
+function navegar(id) {
+
+    const pagina = document.getElementById(id);
+
+    if (!pagina || !pagina.classList.contains("page")) {
+        return;
+    }
+
+    document.querySelectorAll(".page").forEach(elemento => {
+        elemento.classList.remove("active");
+    });
+
+    pagina.classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+/* COPIAR COMANDOS */
+
+function copiarAlternativo(texto) {
+
+    const campo = document.createElement("textarea");
+
+    campo.value = texto;
+    document.body.appendChild(campo);
+    campo.select();
+
+    const resultado = document.execCommand("copy");
+
+    campo.remove();
+
+    alert(
+        resultado
+            ? "Texto copiado correctamente"
+            : "No se pudo copiar"
+    );
+}
+
+function copiar(texto) {
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        navigator.clipboard.writeText(texto)
+            .then(() => alert("Texto copiado"))
+            .catch(() => copiarAlternativo(texto));
+
+    } else {
+        copiarAlternativo(texto);
+    }
+}
+
+function copiarConclusion() {
+
+    copiar(
+        document.getElementById("conclusion").innerText
+    );
+}
+
+/* IMPORTAR CSV JACOCO */
+
+function porcentaje(cubiertos, perdidos) {
+
+    const total = cubiertos + perdidos;
+
+    if (total === 0) return null;
+
+    return cubiertos / total * 100;
+}
+
+function formatoPorcentaje(valor) {
+
+    if (valor === null) return "N/A";
+
+    return valor.toFixed(1).replace(".0", "") + "%";
+}
+
+function leerCSV(texto) {
+
+    const filas = [];
+    let fila = [];
+    let campo = "";
+    let comillas = false;
+
+    for (let i = 0; i < texto.length; i++) {
+
+        const caracter = texto[i];
+
+        if (caracter === '"') {
+
+            if (comillas && texto[i + 1] === '"') {
+                campo += '"';
+                i++;
+            } else {
+                comillas = !comillas;
+            }
+
+        } else if (caracter === "," && !comillas) {
+
+            fila.push(campo);
+            campo = "";
+
+        } else if (
+            (caracter === "\n" || caracter === "\r") &&
+            !comillas
+        ) {
+
+            if (caracter === "\r" && texto[i + 1] === "\n") {
+                i++;
+            }
+
+            fila.push(campo);
+
+            if (fila.some(c => c.length > 0)) {
+                filas.push(fila);
+            }
+
+            fila = [];
+            campo = "";
+
+        } else {
+            campo += caracter;
+        }
+    }
+
+    fila.push(campo);
+
+    if (fila.some(c => c.length > 0)) {
+        filas.push(fila);
+    }
+
+    return filas;
+}
+
+function importarCSV() {
+
+    const archivo =
+        document.getElementById("csvFile").files[0];
+
+    const mensaje =
+        document.getElementById("csvMensaje");
+
+    if (!archivo) {
+        mensaje.textContent = "Selecciona jacoco.csv";
+        return;
+    }
+
+    const lector = new FileReader();
+
+    lector.onload = function(evento) {
+
+        try {
+
+            const filas = leerCSV(evento.target.result);
+
+            if (!filas.length) {
+                throw new Error("CSV vacío.");
+            }
+
+            const encabezados = filas[0];
+
+            const columnas = [
+                "CLASS",
+                "INSTRUCTION_MISSED",
+                "INSTRUCTION_COVERED",
+                "BRANCH_MISSED",
+                "BRANCH_COVERED",
+                "LINE_MISSED",
+                "LINE_COVERED",
+                "METHOD_MISSED",
+                "METHOD_COVERED"
+            ];
+
+            if (!columnas.every(c => encabezados.includes(c))) {
+                throw new Error("Formato CSV inválido.");
+            }
+
+            const indice = nombre =>
+                encabezados.indexOf(nombre);
+
+            const numero = (fila, nombre) =>
+                Number(fila[indice(nombre)] || 0);
+
+            const total = {
+                im: 0, ic: 0,
+                bm: 0, bc: 0,
+                lm: 0, lc: 0,
+                mm: 0, mc: 0
+            };
+
+            const filasTabla = [];
+            let cantidad = 0;
+
+            filas.slice(1).forEach(fila => {
+
+                const nombre = fila[indice("CLASS")];
+
+                if (!nombre) return;
+
+                const im = numero(fila, "INSTRUCTION_MISSED");
+                const ic = numero(fila, "INSTRUCTION_COVERED");
+                const bm = numero(fila, "BRANCH_MISSED");
+                const bc = numero(fila, "BRANCH_COVERED");
+                const lm = numero(fila, "LINE_MISSED");
+                const lc = numero(fila, "LINE_COVERED");
+                const mm = numero(fila, "METHOD_MISSED");
+                const mc = numero(fila, "METHOD_COVERED");
+
+                total.im += im;
+                total.ic += ic;
+                total.bm += bm;
+                total.bc += bc;
+                total.lm += lm;
+                total.lc += lc;
+                total.mm += mm;
+                total.mc += mc;
+
+                cantidad++;
+
+                const tr = document.createElement("tr");
+
+                const datos = [
+                    nombre,
+                    formatoPorcentaje(porcentaje(ic, im)),
+                    formatoPorcentaje(porcentaje(bc, bm)),
+                    lc + "/" + (lc + lm),
+                    im + bm + lm + mm === 0
+                        ? "CUBIERTA"
+                        : "REVISAR"
+                ];
+
+                datos.forEach((dato, i) => {
+
+                    const td = document.createElement("td");
+                    td.textContent = dato;
+
+                    if (i === 0) td.className = "code";
+                    if (i === 4 && dato === "CUBIERTA") {
+                        td.className = "green";
+                    }
+
+                    tr.appendChild(td);
+                });
+
+                filasTabla.push(tr);
+            });
+
+            if (!cantidad) {
+                throw new Error("No hay clases.");
+            }
+
+            document.getElementById("tablaCobertura")
+                .replaceChildren(...filasTabla);
+
+            const ins = porcentaje(total.ic, total.im);
+            const ramas = porcentaje(total.bc, total.bm);
+
+            const insTexto = formatoPorcentaje(ins);
+            const ramasTexto = formatoPorcentaje(ramas);
+
+            document.getElementById("general-instrucciones")
+                .textContent = insTexto;
+
+            document.getElementById("general-ramas")
+                .textContent = ramasTexto;
+
+            document.getElementById("covIns")
+                .textContent = insTexto;
+
+            document.getElementById("covRamas")
+                .textContent = ramasTexto;
+
+            document.getElementById("covLineas")
+                .textContent =
+                total.lc + "/" + (total.lc + total.lm);
+
+            document.getElementById("covMetodos")
+                .textContent =
+                total.mc + "/" + (total.mc + total.mm);
+
+            document.getElementById("labelIns")
+                .textContent = insTexto;
+
+            document.getElementById("labelRamas")
+                .textContent = ramasTexto;
+
+            document.getElementById("clasesGeneral")
+                .textContent = cantidad;
+
+            document.getElementById("donutTexto")
+                .textContent = insTexto;
+
+            document.getElementById("progresoIns")
+                .style.width = (ins ?? 0) + "%";
+
+            document.getElementById("progresoRamas")
+                .style.width = (ramas ?? 0) + "%";
+
+            document.getElementById("barraIns")
+                .style.width = (ins ?? 0) + "%";
+
+            document.getElementById("barraRamas")
+                .style.width = (ramas ?? 0) + "%";
+
+            document.getElementById("donut")
+                .style.background =
+                "conic-gradient(#22c55e " +
+                (ins ?? 0) + "%, #293950 0)";
+
+            mensaje.textContent =
+                "CSV importado: " +
+                cantidad + " clases analizadas.";
+
+            foxyHablar(
+                "Reporte actualizado. Instrucciones: " +
+                insTexto + ". Ramas: " + ramasTexto + "."
+            );
+
+        } catch (error) {
+            mensaje.textContent = error.message;
+        }
+    };
+
+    lector.onerror = function() {
+        mensaje.textContent = "Error al leer CSV.";
+    };
+
+    lector.readAsText(archivo);
+}
+
+/* FOXY ASSISTANT */
+
+function abrirFoxy() {
+
+    document.getElementById("foxyChat")
+        .classList.add("abierto");
+
+    document.getElementById("foxyBoton")
+        .setAttribute("aria-expanded", "true");
+}
+
+function cerrarFoxy() {
+
+    document.getElementById("foxyChat")
+        .classList.remove("abierto");
+
+    document.getElementById("foxyBoton")
+        .setAttribute("aria-expanded", "false");
+}
+
+function alternarFoxy() {
+
+    const chat = document.getElementById("foxyChat");
+
+    if (chat.classList.contains("abierto")) {
+        cerrarFoxy();
+    } else {
+        abrirFoxy();
+    }
+}
+
+function foxyHablar(mensaje) {
+
+    document.getElementById("foxyMensaje")
+        .textContent = mensaje;
+}
+
+function foxyResponder(tema) {
+
+    const mensajes = {
+
+        general:
+            "¡Bienvenido a QualityLab Pro! " +
+            "Aquí puedes revisar las métricas " +
+            "generales de tu proyecto Java.",
+
+        cobertura:
+            "Tu reporte JaCoCo mostró 100% " +
+            "de cobertura de instrucciones, ramas " +
+            "y líneas. Puedes importar un CSV nuevo.",
+
+        pruebas:
+            "La última ejecución registró " +
+            "10 pruebas exitosas, cero fallas " +
+            "y cero errores.",
+
+        tdd:
+            "RED: prueba que falla. " +
+            "GREEN: código mínimo que pasa. " +
+            "REFACTOR: mejorar el código. " +
+            "Mockito permite simular dependencias.",
+
+        reporte:
+            "Aquí tienes los resultados académicos " +
+            "de la Guía 10 y puedes guardar " +
+            "tu reporte como PDF."
+    };
+
+    if (!mensajes[tema]) return;
+
+    foxyHablar(mensajes[tema]);
+    navegar(tema);
+}
+
+/* CERRAR CON ESC */
+
+document.addEventListener("keydown", function(evento) {
+
+    if (evento.key === "Escape") {
+        cerrarFoxy();
+    }
+});
+
+</script>
+
+</body>
+</html>
